@@ -1,0 +1,153 @@
+---
+- name: Create backup directory
+  file:
+    path: /var/lib/backuppc
+    state: directory
+    recurse: no
+
+- name: Mount backup directory by UUID
+  mount:
+    name: /var/lib/backuppc
+    src: UUID=2c41dec6-8d45-4d00-a8d8-e8f3443421e5
+    fstype: ext4
+    opts: noatime
+    state: mounted
+    passno: 2
+
+- name: Install nginx-light
+  package:
+    name: nginx-light
+    state: present
+
+- name: Install nginx fcgiwrap
+  package:
+    name: fcgiwrap
+    state: present
+
+- name: Copy backuppc nginx site configuration
+  copy:
+    src: "{{ role_path }}/files/etc-nginx-sites-available-backuppc"
+    dest: /etc/nginx/sites-available/backuppc
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Reload service nginx
+
+- name: Disable nginx default site configuration
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: Enable backuppc nginx site configuration
+  file:
+    src: /etc/nginx/sites-available/backuppc
+    dest: /etc/nginx/sites-enabled/backuppc
+    owner: root
+    group: root
+    state: link
+  notify:
+    - Reload service nginx
+
+# User authentication
+- name: Install python-passlib
+  package:
+    name: python-passlib
+    state: present
+
+- htpasswd:
+    path: /etc/backuppc/htpasswd
+    name: christian
+    password: 'test'
+    owner: root
+    group: www-data
+    mode: 0640
+
+
+# Create SSL certificates
+- name: Install openssl
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - openssl
+    - python-openssl
+
+- name: Generate an OpenSSL private key
+  openssl_privatekey:
+    path: "/etc/ssl/private/{{ ansible_hostname }}.pem"
+
+- name: Create directory for certificate signing requests
+  file:
+    path: /etc/ssl/csr
+    state: directory
+    mode: 0755
+
+- name: Generate an OpenSSL Certificate Signing Request
+  openssl_csr:
+    path: "/etc/ssl/csr/{{ ansible_hostname }}.csr"
+    privatekey_path: "/etc/ssl/private/{{ ansible_hostname }}.pem"
+    country_name: "DE"
+    organization_name: "bachert.it"
+    email_address: "christian@bachert.it"
+    common_name: "{{ ansible_hostname }}"
+
+- name: Generate a self signed certificate
+  openssl_certificate:
+    path: "/etc/ssl/certs/{{ ansible_hostname }}.crt"
+    privatekey_path: "/etc/ssl/private/{{ ansible_hostname }}.pem"
+    csr_path: "/etc/ssl/csr/{{ ansible_hostname }}.csr"
+    provider: selfsigned
+
+- name: Install backuppc
+  package:
+    name: backuppc
+    state: present
+
+- name: Install backuppc rsync perl library
+  package:
+    name: libfile-rsyncp-perl
+    state: present
+
+- name: Generate SSH keys for backuppc user
+  user:
+    name: backuppc
+    ssh_key_bits: 4096
+    generate_ssh_key: yes
+
+- name: Get public SSH key of backuppc user
+  fetch:
+    src: /var/lib/backuppc/.ssh/id_rsa.pub
+    dest: "{{ playbook_dir }}/files/backuppc-id_rsa.pub"
+    flat: yes
+
+- name: Assign correct user to mounted backup directory
+  file:
+    path: /var/lib/backuppc
+    state: directory
+    owner: backuppc
+    group: backuppc
+    mode: 0750
+    recurse: no
+  notify: 
+    - Reload service backuppc
+
+- name: Copy backuppc configuration
+  copy:
+    src: "{{ role_path }}/files/etc-backuppc-config.pl"
+    dest: "/etc/backuppc/config.pl"
+    mode: 0640
+    owner: backuppc
+    group: www-data
+  notify:
+    - Reload service backuppc
+
+- name: Copy backuppc hosts configuration
+  copy:
+    src: "{{ role_path }}/files/etc-backuppc-hosts"
+    dest: "/etc/backuppc/hosts"
+    mode: 0640
+    owner: backuppc
+    group: www-data
+  notify:
+    - Reload service backuppc

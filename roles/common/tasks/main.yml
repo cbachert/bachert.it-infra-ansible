@@ -1,0 +1,82 @@
+---
+#- name: Check if SSH host keys have already been newly generated once
+#  stat: path=/etc/ssh/ssh_host_generated
+#  register: ssh_host_generated
+#
+#- name: Find all SSH host keys
+#  find:
+#    paths: /etc/ssh
+#    patterns: "ssh_host_*"
+#  register: ssh_host_keys
+#  when: ssh_host_generated.stat.exists == False
+#
+#- name: Remove pre-existing SSH host keys
+#  file:
+#    path: "{{ item.path }}"
+#    state: absent
+#  with_items:
+#    - "{{ ssh_host_keys.files }}"
+#  when: ssh_host_generated.stat.exists == False
+#
+#- name: Generate new SSH host keys
+#  command: dpkg-reconfigure openssh-server
+#  when: ansible_os_family == "Debian" and ssh_host_generated.stat.exists == False
+#
+#- name: Mark SSH host keys as newly generated
+#  file:
+#    path: /etc/ssh/ssh_host_generated
+#    state: touch
+#  when: ssh_host_generated.stat.exists == False
+#  # check for errors first
+#
+#- name: Restart SSH daemon
+#  service:
+#    name: sshd
+#    state: restarted
+#  when: ssh_host_generated.stat.exists == False
+
+- name: Create admin group for sudoers
+  group:
+    name: sudo_admin
+    state: present
+
+- name: Create admin users
+  user:
+    name: "{{ item.name }}"
+    shell: /bin/bash
+    groups: sudo_admin
+    append: yes
+    state: present
+    password: "{{ item.password }}"
+  with_items: 
+    - "{{ ADMIN_USERS }}"
+
+- name: Add authorized key adm_christian
+  authorized_key:
+    user: "{{ item.name }}"
+    state: present
+    key: "{{ lookup('file', '{{ item.keyfile }}') }}"
+  with_items:
+    - "{{ ADMIN_USERS }}"
+
+- name: Create backuppc user
+  user:
+    name: backuppc
+    shell: /bin/sh
+    state: present
+
+- name: Add authorized key backuppc
+  authorized_key:
+    user: backuppc
+    state: present
+    key: "{{ lookup('file', '{{ SSH_KEY_BACKUPPC }}') }}"
+
+- name: Install sudo
+  package:
+    name: sudo
+    state: present
+
+- name: Install vim
+  package:
+    name: vim
+    state: present

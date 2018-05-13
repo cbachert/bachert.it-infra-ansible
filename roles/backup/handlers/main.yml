@@ -1,0 +1,10 @@
+---
+- name: Reload service backuppc
+  service:
+    name: backuppc
+    state: reloaded
+
+- name: Reload service nginx
+  service:
+    name: nginx
+    state: reloaded

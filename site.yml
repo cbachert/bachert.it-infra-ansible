@@ -1,0 +1,14 @@
+---
+- name: apply common configuration to all nodes
+  hosts: all
+  become: true
+
+  roles:
+    - common
+    - wtcross.sudoers
+
+- name: apply backup server configuration
+  hosts: backup
+  become: true
+  roles:
+    - backup
