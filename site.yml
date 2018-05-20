@@ -2,7 +2,7 @@
 - name: apply common configuration to all nodes
   hosts: all
   become: true
-
+  
   roles:
     - common
     - wtcross.sudoers
@@ -15,3 +15,9 @@
   become: true
   roles:
     - backup
+
+- name: apply lan configuration
+  hosts: lan
+  become: true
+  roles:
+    - avahi  
