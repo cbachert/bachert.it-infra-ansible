@@ -2,7 +2,6 @@
 # Example for ADMIN_USERS definition. Real values are included from secret.yml
 #ADMIN_USERS:
 #  - { name: <username>, password: <password_hash>", keyfile: <path_to_keyfile>" }
--include: secret.yml
 
 SSH_KEY_BACKUPPC: "{{ playbook_dir }}/files/backuppc-id_rsa.pub"
 
