@@ -1,0 +1,8 @@
+---
+- name: Install ZeroConf
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - avahi-daemon
+    - libnss-mdns
