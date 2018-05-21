@@ -26,7 +26,7 @@
 
 - name: Copy backuppc nginx site configuration
   copy:
-    src: "{{ role_path }}/files/etc-nginx-sites-available-backuppc"
+    src: "{{ role_path }}/files/etc/nginx/sites-available/backuppc"
     dest: /etc/nginx/sites-available/backuppc
     owner: root
     group: root
@@ -134,7 +134,7 @@
 
 - name: Copy backuppc configuration
   copy:
-    src: "{{ role_path }}/files/etc-backuppc-config.pl"
+    src: "{{ role_path }}/files/etc/backuppc/config.pl"
     dest: "/etc/backuppc/config.pl"
     mode: 0640
     owner: backuppc
@@ -144,10 +144,14 @@
 
 - name: Copy backuppc hosts configuration
   copy:
-    src: "{{ role_path }}/files/etc-backuppc-hosts"
-    dest: "/etc/backuppc/hosts"
+    src: "{{ role_path }}/files/etc/backuppc/{{ item }}"
+    dest: "/etc/backuppc/"
     mode: 0640
     owner: backuppc
     group: www-data
+  with_items:
+    - "hosts"
+    - "eselgurke.local.pl"
+    - "postesel.bachert.it.pl"
   notify:
     - Reload service backuppc
