@@ -1337,7 +1337,8 @@ $Conf{RsyncArgs} = [
   '--hard-links',
   '--times',
   '--block-size=2048',
-  '--recursive'
+  '--recursive',
+  '--checksum-seed=32761'
 ];
 
 #
