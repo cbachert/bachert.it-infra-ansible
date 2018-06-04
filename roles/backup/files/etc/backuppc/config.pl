@@ -1228,7 +1228,8 @@ $Conf{RsyncClientPath} = '/usr/bin/rsync';
 #
 # This setting only matters if $Conf{XferMethod} = 'rsync'.
 #
-$Conf{RsyncClientCmd} = '$sshPath -q -x -l backuppc $host sudo $rsyncPath $argList+';
+#$Conf{RsyncClientCmd} = '$sshPath -q -x -l backuppc $host sudo $rsyncPath $argList+';
+$Conf{RsyncClientCmd} = '$sshPath -c aes256-gcm@openssh.com -q -x -l backuppc $host sudo $rsyncPath $argList+';
 
 #
 # Full command to run rsync for restore on the client.  The following
