@@ -121,16 +121,26 @@
     dest: "{{ playbook_dir }}/files/backuppc-id_rsa.pub"
     flat: yes
 
-- name: Assign correct user to mounted backup directory
+- name: Assign permissions to mounted backup directory
   file:
     path: /var/lib/backuppc
     state: directory
-    owner: backuppc
-    group: backuppc
     mode: 0750
     recurse: no
   notify: 
     - Reload service backuppc
+
+# Commented as the recursive operation is time consuming
+# Only required if UIDs changed, for example after server migration/restore
+#
+#- name: Assign correct user to mounted backup directory
+#  file:
+#    path: /var/lib/backuppc
+#    owner: backuppc
+#    group: backuppc
+#    recurse: yes
+#  notify:
+#    - Reload service backuppc
 
 - name: Copy backuppc configuration
   copy:
