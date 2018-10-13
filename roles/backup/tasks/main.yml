@@ -1,4 +1,14 @@
 ---
+- name: Install cryptsetup
+  package:
+    name: cryptsetup
+    state: present
+
+- name: Install LVM
+  package:
+    name: lvm2
+    state: present
+
 - name: Create backup directory
   file:
     path: /var/lib/backuppc
