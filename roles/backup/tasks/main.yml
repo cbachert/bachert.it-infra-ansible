@@ -18,9 +18,9 @@
 - name: Mount backup directory by UUID
   mount:
     name: /var/lib/backuppc
-    src: UUID=2c41dec6-8d45-4d00-a8d8-e8f3443421e5
+    src: /dev/mapper/BACKUPPC--VG-BACKUPPC--LV--DATA
     fstype: ext4
-    opts: noatime
+    opts: noatime,noauto
     state: mounted
     passno: 2
 
