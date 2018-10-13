@@ -175,3 +175,11 @@
     - "postesel.bachert.it.pl"
   notify:
     - Reload service backuppc
+
+- name: Copy hdparm configuration
+  copy:
+    src: "{{ role_path }}/files/etc/hdparm.conf"
+    dest: "/etc/hdparm.conf"
+    mode: 0644
+    owner: root
+    group: root
