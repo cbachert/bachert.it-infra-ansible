@@ -43,6 +43,7 @@ site.retry
 # Personalised configuration #
 ##############################
 files/backuppc-id_rsa.pub
+files/adm_christian.pub
 production
 staging
 roles/git
