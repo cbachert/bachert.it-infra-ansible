@@ -101,7 +101,7 @@
     country_name: "DE"
     organization_name: "bachert.it"
     email_address: "postmaster@bachert.it"
-    common_name: "{{ ansible_hostname }}"
+    common_name: "{{ ansible_fqdn }}"
   notify:
     - Generate a self signed certificate
     - Reload service nginx
