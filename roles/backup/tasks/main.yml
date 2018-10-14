@@ -67,8 +67,8 @@
 
 - htpasswd:
     path: /etc/backuppc/htpasswd
-    name: christian
-    password: 'test'
+    name: admin
+    password: 'admin'
     owner: root
     group: www-data
     mode: 0640
@@ -99,7 +99,7 @@
     privatekey_path: "/etc/ssl/private/{{ ansible_hostname }}.pem"
     country_name: "DE"
     organization_name: "bachert.it"
-    email_address: "christian@bachert.it"
+    email_address: "postmaster@bachert.it"
     common_name: "{{ ansible_hostname }}"
 
 - name: Generate a self signed certificate
