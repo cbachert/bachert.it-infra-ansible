@@ -80,3 +80,7 @@
   package:
     name: vim
     state: present
+
+- name: Set timezone to Europe/Dublin
+  timezone:
+    name: Europe/Dublin
