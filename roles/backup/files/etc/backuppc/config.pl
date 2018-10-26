@@ -1713,7 +1713,8 @@ $Conf{CompressLevel} = 3;
 # Despite the name, this parameter sets the timeout for all transport
 # methods (tar, smb etc).
 #
-$Conf{ClientTimeout} = 72000;
+#$Conf{ClientTimeout} = 72000;
+$Conf{ClientTimeout} = 86400;
 
 #
 # Maximum number of log files we keep around in each PC's directory
