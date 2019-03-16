@@ -16,6 +16,12 @@
   roles:
     - backup
 
+- name: apply docker configuration
+  hosts: docker
+  become: true
+  roles:
+    - docker
+
 - name: apply lan configuration
   hosts: lan
   become: true

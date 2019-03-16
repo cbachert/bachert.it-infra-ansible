@@ -1,0 +1,10 @@
+---
+#- name: Add docker daemon configuration file
+#  copy:
+#    src: "{{ role_path }}/files/etc/docker/daemon.json"
+#    dest: "/etc/docker/daemon.json"
+#    mode: 0600
+#    owner: root
+#    group: root
+#  notify:
+#    - Reload service docker
