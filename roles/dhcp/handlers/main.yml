@@ -1,0 +1,6 @@
+---
+- name: Reload service isc-dhcp-server
+  service:
+    name: isc-dhcp-server
+    state: reloaded
+

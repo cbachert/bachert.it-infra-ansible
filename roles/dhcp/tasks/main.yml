@@ -1,0 +1,25 @@
+---
+- name: Install isc-dhcp-server
+  package:
+    name: isc-dhcp-server
+    state: present
+
+- name: Copy isc-dhcp-server default configuration
+  copy:
+    src: "{{ role_path }}/files/etc/default/isc-dhcp-server"
+    dest: /etc/default/isc-dhcp-server
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Reload service isc-dhcp-server
+
+- name: Copy isc-dhcp-server dhcpd.conf configuration
+  copy:
+    src: "{{ role_path }}/files/etc/dhcp/dhcpd.conf"
+    dest: /etc/dhcp/dhcpd.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Reload service isc-dhcp-server

@@ -27,3 +27,9 @@
   become: true
   roles:
     - avahi  
+
+- name: apply dhcp configuration
+  hosts: raspberrypi.local
+  become: true
+  roles:
+    - dhcp
