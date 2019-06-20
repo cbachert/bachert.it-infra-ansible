@@ -84,3 +84,8 @@
 - name: Set timezone to Europe/Dublin
   timezone:
     name: Europe/Dublin
+
+- name: Install unzip
+  package:
+    name: unzip
+    state: present
