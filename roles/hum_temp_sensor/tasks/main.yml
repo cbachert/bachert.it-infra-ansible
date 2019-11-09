@@ -1,0 +1,29 @@
+---
+- name: Only run "update_cache=yes" if the last one is more than 3600 seconds ago
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install requirements
+  pip: 
+    name:
+      - RPi.GPIO
+      - paho-mqtt
+    virtualenv: /opt/hum_temp_sensor
+    virtualenv_python: python3
+
+- name: Copy dht11 python library
+  copy:
+    src: dht11.py
+    dest: /opt/hum_temp_sensor/dht11.py
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Copy dht11 mqtt monitoring script
+  copy:
+    src: dht11_mqtt.py
+    dest: /opt/hum_temp_sensor/dht11_mqtt.py
+    owner: root
+    group: root
+    mode: '0755'

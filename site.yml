@@ -33,3 +33,9 @@
   become: true
   roles:
     - dhcp
+
+- name: apply humidity/temperature sensor configuration
+  hosts: raspberrypi.local
+  become: true
+  roles:
+    - hum_temp_sensor
