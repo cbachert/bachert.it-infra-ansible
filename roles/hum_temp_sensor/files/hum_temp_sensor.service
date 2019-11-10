@@ -1,0 +1,15 @@
+[Unit]
+Description=Humidity / Temperature monitoring via mqtt and dht11 sensor
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/hum_temp_sensor/
+ExecStart=/opt/hum_temp_sensor/bin/python /opt/hum_temp_sensor/dht11_mqtt.py
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=hum_temp_sensor
+
+[Install]
+WantedBy=multi-user.target

@@ -7,6 +7,7 @@ import time
 import datetime
 import paho.mqtt.client as mqttClient
 import time
+import sys
 
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
@@ -49,6 +50,7 @@ try:
             print("Last valid input: " + str(datetime.datetime.now()))
             print("Temperature: %-3.1f C" % result.temperature)
             print("Humidity: %-3.1f %%" % result.humidity)
+            sys.stdout.flush() # log stdout via systemd immediately instead of buffering
             client.publish(broker_topic_prefix+'/job/'+broker_topic_job+'/instance/'+broker_topic_instance+'/temperature_celsius', str(result.temperature), 0, True)
             client.publish(broker_topic_prefix+'/job/'+broker_topic_job+'/instance/'+broker_topic_instance+'/humidity', str(result.humidity), 0, True)
             time.sleep(60)

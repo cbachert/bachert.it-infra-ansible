@@ -11,6 +11,7 @@
       - paho-mqtt
     virtualenv: /opt/hum_temp_sensor
     virtualenv_python: python3
+  notify: Reload service hum_temp_sensor
 
 - name: Copy dht11 python library
   copy:
@@ -19,6 +20,7 @@
     owner: root
     group: root
     mode: '0644'
+  notify: Reload service hum_temp_sensor
 
 - name: Copy dht11 mqtt monitoring script
   copy:
@@ -27,3 +29,40 @@
     owner: root
     group: root
     mode: '0755'
+  notify: Reload service hum_temp_sensor
+
+- name: Copy dht11 mqtt monitoring systemd service file
+  copy:
+    src: hum_temp_sensor.service
+    dest: /opt/hum_temp_sensor/hum_temp_sensor.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - daemon_reload
+    - Reload service hum_temp_sensor
+
+- name: Create symlink for dht11 mqtt monitoring systemd service file
+  file:
+    src: "/opt/hum_temp_sensor/hum_temp_sensor.service"
+    dest: "/etc/systemd/system/hum_temp_sensor.service"
+    state: link
+  notify: Reload service hum_temp_sensor
+
+- name: Enable dht11 mqtt monitoring systemd service
+  systemd:
+    name: hum_temp_sensor
+    state: started
+    enabled: yes
+  notify: Reload service hum_temp_sensor
+
+- name: Copy rsyslog.d config file
+  copy:
+    src: hum_temp_sensor.conf
+    dest: /etc/rsyslog.d/hum_temp_sensor.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - reload_rsyslog
+    - Reload service hum_temp_sensor

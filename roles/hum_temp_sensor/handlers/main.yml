@@ -1,0 +1,14 @@
+---
+- name: reload_rsyslog
+  systemd:
+    name: rsyslog
+    state: restarted
+
+- name: daemon_reload
+  systemd:
+    daemon_reload: yes
+
+- name: Reload service hum_temp_sensor
+  systemd:
+    name: hum_temp_sensor
+    state: restarted
