@@ -57,3 +57,5 @@ try:
 except KeyboardInterrupt:
     client.disconnect()
     client.loop_stop()
+finally:
+    GPIO.cleanup()
