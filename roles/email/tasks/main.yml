@@ -1,0 +1,11 @@
+---
+- name: Copy e-mail server public key
+  copy:
+    src: "{{ role_path }}/files/etc/ssl/certs/postesel.bachert.it-pub.pem"
+    dest: /etc/ssl/certs/postesel.bachert.it-pub.pem
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Restart service dovecot
+

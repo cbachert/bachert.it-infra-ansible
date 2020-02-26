@@ -39,3 +39,9 @@
   become: true
   roles:
     - hum_temp_sensor
+
+- name: apply email configuration
+  hosts: postesel.bachert.it
+  become: true
+  roles:
+    - email
