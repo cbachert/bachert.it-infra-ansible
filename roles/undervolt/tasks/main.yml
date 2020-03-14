@@ -1,0 +1,58 @@
+---
+- name: Create undervolt directory
+  file:
+    path: /opt/undervolt
+    state: directory
+    mode: '0755'
+
+- name: Copy undervolt systemd service file
+  copy:
+    src: opt/undervolt/undervolt.service
+    dest: /opt/undervolt/undervolt.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - daemon_reload
+    - systemd_start_undervolt.service
+
+- name: Copy undervolt systemd timer file
+  copy:
+    src: opt/undervolt/undervolt.timer
+    dest: /opt/undervolt/undervolt.timer
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - daemon_reload
+    - systemd_start_undervolt.service
+
+- name: Copy undervolt script
+  copy:
+    src: opt/undervolt/undervolt.py
+    dest: /opt/undervolt/undervolt.py
+    owner: root
+    group: root
+    mode: '0755'
+  notify:
+    - daemon_reload
+    - systemd_start_undervolt.service
+
+- name: Create symlink for undervolt systemd service file
+  file:
+    src: "/opt/undervolt/undervolt.service"
+    dest: "/etc/systemd/system/undervolt.service"
+    state: link
+  notify:
+    - daemon_reload
+    - systemd_start_undervolt.service
+
+- name: Create symlink for undervolt systemd timer file
+  file:
+    src: "/opt/undervolt/undervolt.timer"
+    dest: "/etc/systemd/system/undervolt.timer"
+    state: link
+  notify:
+    - daemon_reload
+    - systemd_enable_undervolt.timer
+

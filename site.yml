@@ -45,3 +45,9 @@
   become: true
   roles:
     - email
+
+- name: apply undervolt configuration
+  hosts: eselgurke.local
+  become: true
+  roles:
+    - undervolt

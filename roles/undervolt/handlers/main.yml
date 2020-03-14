@@ -1,0 +1,15 @@
+---
+- name: daemon_reload
+  systemd:
+    daemon_reload: yes
+
+- name: systemd_start_undervolt.service
+  systemd:
+    name: undervolt.service
+    state: started
+
+- name: systemd_enable_undervolt.timer
+  systemd:
+    name: undervolt.timer
+    state: started
+    enabled: yes
