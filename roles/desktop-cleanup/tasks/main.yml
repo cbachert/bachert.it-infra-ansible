@@ -1,0 +1,9 @@
+---
+- name: Create Cron job for hourly deleting user .cache files older than seven days
+  cron:
+    name: Delete user .cache files older than seven days
+    special_time: hourly
+    user: root
+    job: "find /home/*/.cache/ -type f -atime +7 -delete > /dev/null 2>& 1"
+    cron_file: desktop-cleanup
+

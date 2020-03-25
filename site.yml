@@ -51,3 +51,9 @@
   become: true
   roles:
     - undervolt
+
+- name: apply desktop-cleanup
+  hosts: eselgurke.local
+  become: true
+  roles:
+    - desktop-cleanup
