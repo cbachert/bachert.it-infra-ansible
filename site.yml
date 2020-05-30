@@ -57,3 +57,9 @@
   become: true
   roles:
     - desktop-cleanup
+
+- name: apply PulseAudio configuration
+  hosts: eselgurke.local
+  become: true
+  roles:
+    - pulseaudio

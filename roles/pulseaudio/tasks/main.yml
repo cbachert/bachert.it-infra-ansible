@@ -1,0 +1,6 @@
+---
+- name: PulseAudio - Disable Corking (auto muting music when voice stream is playing)
+  lineinfile:
+    path: /etc/pulse/default.pa
+    regexp: '^load-module module-role-cork'
+    line: '#load-module module-role-cork'
