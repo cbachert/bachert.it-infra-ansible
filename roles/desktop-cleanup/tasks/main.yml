@@ -6,4 +6,11 @@
     user: root
     job: "find /home/*/.cache/ -type f -atime +7 -delete > /dev/null 2>& 1"
     cron_file: desktop-cleanup
+- name: Set systemd journald log retention period to seven days
+  lineinfile:
+    path: /etc/systemd/journald.conf
+    regexp: '^SystemMaxUse='
+    line: SystemMaxUse=100M
+    insertafter: '^#SystemMaxUse='
+  notify: Reload service systemd-journald.service
 

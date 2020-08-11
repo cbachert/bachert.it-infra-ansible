@@ -1,0 +1,5 @@
+---
+- name: Reload service systemd-journald.service
+  systemd:
+    name: systemd-journald.service
+    state: restarted
