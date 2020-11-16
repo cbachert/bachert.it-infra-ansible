@@ -1,10 +1,29 @@
 ---
-#- name: Add docker daemon configuration file
-#  copy:
-#    src: "{{ role_path }}/files/etc/docker/daemon.json"
-#    dest: "/etc/docker/daemon.json"
-#    mode: 0600
-#    owner: root
-#    group: root
-#  notify:
-#    - Reload service docker
+- name: Configure docker daemon - create directory
+  file:
+    path: /etc/docker
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+- name: Configure docker daemon - template daemon config
+  template:
+    src: etc-docker-daemon.json.j2
+    dest: /etc/docker/daemon.json
+    owner: root
+    mode: 0644
+  notify:
+    - systemd_restart_docker
+- name: install docker
+  apt:
+    name: docker.io
+    update_cache: yes
+    cache_valid_time: 3600
+  notify:
+    - systemd_daemon_reload
+# Disabled, armbian Ubuntu 20.04 does not seem to like this:
+#- name: enable docker
+#  systemd:
+#    name: docker
+#    enabled: yes
+#    state: "started"

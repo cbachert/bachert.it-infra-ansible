@@ -15,6 +15,7 @@
   become: true
   roles:
     - backup
+    - docker
 
 - name: apply docker configuration
   hosts: docker
