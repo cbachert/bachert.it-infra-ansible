@@ -60,9 +60,9 @@
     - Reload service nginx
 
 # User authentication
-- name: Install python-passlib
+- name: Install python3-passlib
   package:
-    name: python-passlib
+    name: python3-passlib
     state: present
 
 - htpasswd:
@@ -79,10 +79,15 @@
 - name: Install openssl
   package:
     name: "{{ item }}"
-    state: latest
+    state: present
   with_items:
     - openssl
     - python-openssl
+
+- name: Install python3-cryptography
+  package:
+    name: python3-cryptography
+    state: present
 
 - name: Generate an OpenSSL private key
   openssl_privatekey:
@@ -105,7 +110,15 @@
   notify:
     - Generate a self signed certificate
     - Reload service nginx
-  
+
+- name: Install backuppc prerequisites
+  package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - smbclient
+    - samba-common-bin
+
 - name: Install backuppc
   package:
     name: backuppc
