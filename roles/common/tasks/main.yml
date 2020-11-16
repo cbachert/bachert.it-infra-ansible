@@ -89,3 +89,10 @@
   package:
     name: unzip
     state: present
+
+- name: Mount swap
+  lineinfile:
+    path: /etc/fstab
+    regexp: "{{ '^'+swap_fs }}"
+    line: "{{ swap_fs + ' none swap sw 0 0' }}"
+  when: swap_fs is defined
