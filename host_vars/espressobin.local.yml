@@ -1,0 +1,9 @@
+mounts:
+  - name: /var/lib/backuppc
+    src: /dev/mapper/BACKUPPC--VG-BACKUPPC--LV--DATA
+    fstype: ext4
+    opts: noatime,noauto
+    state: present
+  - src: /dev/BACKUPPC-VG/BACKUPPC-LV-SWAP
+    fstype: swap
+    opts: sw,noauto

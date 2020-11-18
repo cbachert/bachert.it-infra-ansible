@@ -90,9 +90,22 @@
     name: unzip
     state: present
 
-- name: Mount swap
+- name: Mounts - Swap
   lineinfile:
     path: /etc/fstab
-    regexp: "{{ '^'+swap_fs }}"
-    line: "{{ swap_fs + ' none swap sw 0 0' }}"
-  when: swap_fs is defined
+    regexp: "{{ '^' + item.src }}"
+    line: "{{ item.src + ' none swap ' + item.opts|default('sw') + ' 0 0' }}"
+  loop: "{{ mounts }}"
+  when: (mounts is defined) and (item.fstype == 'swap')
+
+- name: Mounts
+  mount:
+    name: "{{ item.name }}"
+    src: "{{ item.src }}"
+    fstype: "{{ item.fstype }}"
+    opts: "{{ item.opts }}"
+    state: "{{ item.state | default('mounted') }}"
+    dump: "{{ item.dump | default('0') }}"
+    passno: "{{ item.passno | default('0') }}"
+  loop: "{{ mounts }}"
+  when: (mounts is defined) and (item.fstype != 'swap')
