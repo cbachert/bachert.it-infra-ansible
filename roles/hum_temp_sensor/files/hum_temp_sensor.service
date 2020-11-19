@@ -5,7 +5,7 @@ After=network.target
 [Service]
 Type=simple
 WorkingDirectory=/opt/hum_temp_sensor/
-ExecStart=/opt/hum_temp_sensor/bin/python /opt/hum_temp_sensor/dht11_mqtt.py
+ExecStart=/opt/hum_temp_sensor/bin/python /opt/hum_temp_sensor/dht11_monitor.py
 Restart=always
 StandardOutput=syslog
 StandardError=syslog

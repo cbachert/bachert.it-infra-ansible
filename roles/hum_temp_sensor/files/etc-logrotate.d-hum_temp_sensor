@@ -1,0 +1,9 @@
+/var/log/hum_temp_sensor.log
+{
+  rotate 7
+  daily
+  missingok
+  notifempty
+  delaycompress
+  compress
+}

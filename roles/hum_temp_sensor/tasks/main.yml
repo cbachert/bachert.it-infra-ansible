@@ -22,16 +22,25 @@
     mode: '0644'
   notify: Reload service hum_temp_sensor
 
-- name: Copy dht11 mqtt monitoring script
+- name: Copy dht11 local monitoring script
   copy:
-    src: dht11_mqtt.py
-    dest: /opt/hum_temp_sensor/dht11_mqtt.py
+    src: dht11_local.py
+    dest: /opt/hum_temp_sensor/dht11_monitor.py
     owner: root
     group: root
     mode: '0755'
   notify: Reload service hum_temp_sensor
 
-- name: Copy dht11 mqtt monitoring systemd service file
+#- name: Copy dht11 mqtt monitoring script
+#  copy:
+#    src: dht11_mqtt.py
+#    dest: /opt/hum_temp_sensor/dht11_monitor.py
+#    owner: root
+#    group: root
+#    mode: '0755'
+#  notify: Reload service hum_temp_sensor
+
+- name: Copy dht11 monitoring systemd service file
   copy:
     src: hum_temp_sensor.service
     dest: /opt/hum_temp_sensor/hum_temp_sensor.service
@@ -42,14 +51,14 @@
     - daemon_reload
     - Reload service hum_temp_sensor
 
-- name: Create symlink for dht11 mqtt monitoring systemd service file
+- name: Create symlink for dht11 monitoring systemd service file
   file:
     src: "/opt/hum_temp_sensor/hum_temp_sensor.service"
     dest: "/etc/systemd/system/hum_temp_sensor.service"
     state: link
   notify: Reload service hum_temp_sensor
 
-- name: Enable dht11 mqtt monitoring systemd service
+- name: Enable dht11 monitoring systemd service
   systemd:
     name: hum_temp_sensor
     state: started
