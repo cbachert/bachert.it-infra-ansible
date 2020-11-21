@@ -1,0 +1,118 @@
+---
+- name: Install cryptsetup
+  package:
+    name: cryptsetup
+    state: present
+
+- name: Install LVM
+  package:
+    name: lvm2
+    state: present
+
+- name: Create backup directory structure
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: no
+  loop:
+    - "{{ backuproot }}"
+    - "{{ backuproot }}/data"
+    - "{{ backuproot }}/etc"
+    - "{{ backuproot }}/home"
+
+- name: Assign permissions to mounted backup directory
+  file:
+    path: "{{ backuproot }}"
+    state: directory
+    mode: 0750
+    recurse: no
+
+- name: Create backuppc group
+  group:
+    name: backuppc
+    state: present
+
+- name: Create backuppc user
+  user:
+    name: backuppc
+    home: "{{ backuproot }}/home"
+    shell: /usr/sbin/nologin
+    groups: backuppc
+
+- name: Generate SSH keys for backuppc user
+  user:
+    name: backuppc
+    ssh_key_bits: 4096
+    generate_ssh_key: yes
+
+- name: Get public SSH key of backuppc user
+  fetch:
+    src: "{{ backuproot }}/home/.ssh/id_rsa.pub"
+    dest: "{{ playbook_dir }}/files/backuppc-id_rsa.pub"
+    flat: yes
+
+- name: Copy backuppc configuration
+  copy:
+    src: "etc/backuppc/{{ item }}"
+    dest: "{{ backuproot }}/etc/{{ item }}"
+    mode: 0640
+    owner: backuppc
+    group: www-data
+  loop:
+    - "config.pl"
+    - "hosts"
+
+- name: Copy backuppc hosts configuration
+  copy:
+    src: "etc/backuppc/pc/{{ item }}"
+    dest: "{{ backuproot }}/etc/pc/"
+    mode: 0640
+    owner: backuppc
+    group: www-data
+  with_items:
+    - "eselgurke.local.pl"
+    - "postesel.bachert.it.pl"
+
+- name: Copy hdparm configuration
+  copy:
+    src: "etc/hdparm.conf"
+    dest: "/etc/hdparm.conf"
+    mode: 0644
+    owner: root
+    group: root
+
+- name: Install python3-docker
+  package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - 'python3-distutils'
+    - 'python3-docker'
+
+- name: Copy backuppc docker image
+  unarchive:
+    src: "backuppc-arm-4.4.0-2.tar.tar.xz"
+    dest: "{{ backuproot }}"
+
+- name: Load backuppc image from archive
+  docker_image:
+    name: backuppc
+    tag: 4.4.0-2
+    load_path: "{{ backuproot }}/backuppc-arm-4.4.0-2.tar"
+    source: load
+    timeout: 300
+
+- name: Create backuppc container
+  docker_container:
+    name: backuppc
+    state: present
+    image: backuppc:4.4.0-2
+    volumes:
+      - /var/lib/backuppc/etc:/etc/backuppc
+      - /var/lib/backuppc/home:/home/backuppc
+      - /var/lib/backuppc/data:/data/backuppc
+    env:
+        BACKUPPC_UUID: "1001"
+        BACKUPPC_GUID: "1002"
+    published_ports:
+      - "80:8080"

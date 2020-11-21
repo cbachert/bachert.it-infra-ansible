@@ -1,12 +1,10 @@
 ---
 - name: apply common configuration to all nodes
   hosts: all
-  become: true
-  
+  become: true 
   roles:
     - common
     - wtcross.sudoers
-
   vars_files:
     - roles/common/vars/secret.yml
 
@@ -14,8 +12,8 @@
   hosts: backup
   become: true
   roles:
-    - backup
     - docker
+    - backuppc4
 
 - name: apply docker configuration
   hosts: docker
