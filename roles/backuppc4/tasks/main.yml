@@ -4,6 +4,14 @@
     name: cryptsetup
     state: present
 
+- name: Copy cryptsetup mount script
+  copy:
+    src: "opt/mount-backup.sh"
+    dest: "/opt/mount-backup.sh"
+    mode: 0750
+    owner: root
+    group: root
+
 - name: Install LVM
   package:
     name: lvm2
