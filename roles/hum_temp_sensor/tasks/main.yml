@@ -5,6 +5,13 @@
     cache_valid_time: 3600
 
 - name: Install requirements
+  apt:
+    pkg:
+      - python3-pip
+      - python3-virtualenv
+      - python3-setuptools
+
+- name: Install python requirements
   pip: 
     name:
       - RPi.GPIO
