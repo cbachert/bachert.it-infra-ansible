@@ -62,3 +62,9 @@
   become: true
   roles:
     - pulseaudio
+
+- name: apply log2ram
+  hosts: raspberrypi.local
+  become: true
+  roles:
+    - log2ram

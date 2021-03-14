@@ -1,0 +1,23 @@
+---
+- name: Log2Ram - Add Repository Key
+  apt_key:
+    url: https://azlux.fr/repo.gpg.key
+    state: present
+  register: aptkey
+
+- name: Log2Ram - Add Repository
+  apt_repository:
+    repo: deb http://packages.azlux.fr/debian/ buster main
+    state: present
+  register: aptrepo
+
+- name: Log2Ram - Update APT
+  apt:
+    update_cache: yes
+  when: aptkey.changed or aptrepo.changed
+
+- name: Log2Ram - Install
+  apt:
+    pkg:
+      - rsync
+      - log2ram
