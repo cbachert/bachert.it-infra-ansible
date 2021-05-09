@@ -120,7 +120,7 @@
       - /var/lib/backuppc/home:/home/backuppc
       - /var/lib/backuppc/data:/data/backuppc
     env:
-        BACKUPPC_UUID: "1001"
-        BACKUPPC_GUID: "1002"
+        BACKUPPC_UUID: "1002"
+        BACKUPPC_GUID: "1003"
     published_ports:
       - "80:8080"
