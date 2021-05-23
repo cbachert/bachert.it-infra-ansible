@@ -1,0 +1,21 @@
+---
+- name: tftp - Install tftpd-hpa
+  package:
+    name: tftpd-hpa
+    state: present
+
+- name: tftp - Enable tftpd-hpa systemd service
+  systemd:
+    name: tftpd-hpa
+    state: started
+    enabled: yes
+
+- name: tftp - Copy tftpd-hpa configuration
+  copy:
+    src: "{{ role_path }}/files/etc/default/tftpd-hpa"
+    dest: /etc/default/tftpd-hpa
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Reload service tftpd-hpa

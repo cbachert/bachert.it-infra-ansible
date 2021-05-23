@@ -1,0 +1,5 @@
+---
+- name: Reload service tftpd-hpa
+  service:
+    name: tftpd-hpa
+    state: restarted

@@ -68,3 +68,16 @@
   become: true
   roles:
     - log2ram
+
+- name: apply tftp
+  hosts: raspberrypi.local
+  become: true
+  roles:
+    - tftp
+
+#- name: apply pisurveillance
+#  hosts: raspberrypi.local
+#  become: true
+#  roles:
+#    - pisurveillance
+#
