@@ -4,6 +4,35 @@
     name: tftpd-hpa
     state: present
 
+- name: tftp - Install pxelinux
+  package:
+    name: pxelinux
+    state: present
+
+- name: tftp - Copy pxelinus files
+  copy:
+    src: /usr/lib/PXELINUX/pxelinux.0
+    dest: /srv/tftp/pxelinux.0
+    remote_src: yes
+
+- name: tftp - Create PXE directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "/srv/tftp/pxelinux.cfg"
+
+- name: tftp - Copy BIOS files
+  copy:
+    src: /usr/lib/syslinux/modules/bios/ldlinux.c32
+    dest: /srv/tftp/ldlinux.c32
+    remote_src: yes
+
+- name: tftp - Copy pxelinux.cfg
+  copy:
+    src: srv/tftp/pxelinux.cfg/default
+    dest: /srv/tftp/pxelinux.cfg/default
+
 - name: tftp - Enable tftpd-hpa systemd service
   systemd:
     name: tftpd-hpa
