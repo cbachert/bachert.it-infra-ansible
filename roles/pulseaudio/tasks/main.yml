@@ -4,4 +4,4 @@
     path: /etc/pulse/default.pa
     regexp: '^load-module module-role-cork'
     line: '#load-module module-role-cork'
-  notify: Reload service systemd-journald.service
+  notify: Reload service systemd-journald
