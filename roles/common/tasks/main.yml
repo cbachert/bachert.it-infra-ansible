@@ -81,9 +81,9 @@
     name: vim
     state: present
 
-- name: Set timezone to Europe/Dublin
+- name: Set timezone to Europe/Berlin
   timezone:
-    name: Europe/Dublin
+    name: Europe/Berlin
 
 - name: Install unzip
   package:
